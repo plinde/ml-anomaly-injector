@@ -90,7 +90,7 @@ def buildAnomalyEventSeries(daysBack = 1):
 
         # break when we reach the current time again
         if STEP_TIME == ANOMALY_END_TIME:
-            print "stop!"
+            # print "stop!"
             break
 
         # step 5 seconds forward for each event

@@ -31,6 +31,8 @@ Output:
 ```
 creating time series for previous 7 days
 creating anomaly time series range within the previous 7 days
+Anomaly Start Time 2017-03-01T18:31:23Z
+Anomaly End Time 2017-03-01T19:01:23Z
 ```
 
 Check your Kibana (localhost:5601) and define an index pattern for "smoke_event-*", using @timestamp as the timestamp field. You should see time-series data for the period requested (e.g. 7 days). You should also see a 'spike' up in the histogram. This is your anomaly.
