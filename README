@@ -1,0 +1,15 @@
+pre-reqs:
+curl
+jq - https://stedolan.github.io/jq/
+jo - https://github.com/jpmens/jo
+
+1. populate your Elasticsearch cluster connection info in your shell's env vars OR run setenv.sh
+2. ./run.sh (currently hard-coded to use 'index' and 2016-04.10, 2016.04.11 as hard-coded values)
+
+setenv.sh - environment variables for run.sh and descedents. this file does NOT go into source control, see .gitignore
+setenv.sh.template - template kept in source control, copy this to setenv.sh and populate with your environment
+run.sh - main shell script to execute the comparison job
+requirements.txt - for 'python pip install -f;
+json-compare-engine.props - properties file, using Python ConfigParser format
+json-compare-engine.py - main python comparison class
+data - temporary data workspace, gets auto-created if it doesn't exist
