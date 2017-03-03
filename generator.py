@@ -77,8 +77,8 @@ def buildAnomalyEventSeries(daysBack = 1):
     ANOMALY_START_TIME = CURRENT_TIME - timedelta(days=anomaly_factor)
     ANOMALY_END_TIME = ANOMALY_START_TIME + timedelta(minutes=30)
 
-    print "Anomaly Start Time %s" % ANOMALY_START_TIME
-    print "Anomaly End Time %s" %  ANOMALY_END_TIME
+    print "Anomaly Start Time %s" % ANOMALY_START_TIME.strftime('%Y-%m-%dT%H:%M:%SZ')
+    print "Anomaly End Time %s" %  ANOMALY_END_TIME.strftime('%Y-%m-%dT%H:%M:%SZ')
 
     ### Set starting time (e.g. 7 days ago)
     STEP_TIME = ANOMALY_START_TIME
@@ -133,11 +133,11 @@ def writeEventToLogstashHTTP(json_event):
     # print r.content
 
 def main():
-    
+
     daysBack = 7
-    print "creating time series for previous 7 days"
+    print "creating time series for previous %s days" % daysBack
     buildEventSeries(daysBack)
-    print "creating anomaly time series range within the previous 7 days"
+    print "creating anomaly time series range within the previous %s days" % daysBack
     buildAnomalyEventSeries(daysBack)
 
 if __name__ == "__main__":
