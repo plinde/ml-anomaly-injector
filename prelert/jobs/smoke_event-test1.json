@@ -2,14 +2,13 @@
   "id": "smoke_event-test1",
   "description": "",
   "analysisConfig": {
-    "bucketSpan": 5,
+    "bucketSpan": 30,
     "influencers": [
       "request"
     ],
     "detectors": [
       {
-        "function": "count",
-        "byFieldName": "request"
+        "function": "count"
       }
     ]
   },

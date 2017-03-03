@@ -1,3 +1,2 @@
 requests
-elasticsearch-py
 redis

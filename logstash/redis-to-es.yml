@@ -1,0 +1,21 @@
+input {
+  redis {
+    data_type => "list"
+    key => "smoke_event"
+    codec => "json"
+    add_field => { "type" => "smoke_event" }
+  }
+}
+
+filter {
+  date {
+    match => [ "timestamp", "yyyy-MM-dd'T'HH:mm:ssZ" ]
+  }
+}
+
+output {
+  elasticsearch {
+    index => "%{type}-%{+YYYY.MM.dd}"
+    flush_size => 1000
+  }
+}
