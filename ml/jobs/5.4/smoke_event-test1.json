@@ -18,7 +18,7 @@
     ]
   },
   "data_description": {
-    "time_field": "@timestamp",
+    "time_field": "timestamp",
     "time_format": "epoch_ms"
   },
   "model_snapshot_retention_days": 1,

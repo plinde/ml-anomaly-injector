@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import sys
 import json
 import datetime
@@ -50,7 +51,7 @@ def buildEventSeries(daysBack = 7, bulkSize = 1000):
     # connection to elasticsearch
     es = Elasticsearch(host='localhost',http_auth=['elastic','changeme'])
     # create index, even if it exists already
-    es.indices.create(index='test', ignore=400)
+    es.indices.create(index='smoke_event', ignore=400)
     print "elasticsearch bulk size is %i" % bulkSize
         
     while True:

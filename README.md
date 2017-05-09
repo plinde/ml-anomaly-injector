@@ -9,7 +9,7 @@ The utility will generate a linear time-series set of 'HTTP access log' type eve
 ~~* In ```logstash/```, there are some Logstash configs which help with ingestion of the events.~~
 
 #### Expectations
-* Python 3
+* Python 2.7+ 
 * Elastic Stack 5.4+, running localhost:9200 () plinde/ml-anomaly-injector#3
 
 * install python dependencies
@@ -31,12 +31,16 @@ Anomaly Start Time 2017-03-01T18:31:23Z
 Anomaly End Time 2017-03-01T19:01:23Z
 ```
 
-Check your Kibana (localhost:5601) and define an index pattern for "smoke_event-*", using @timestamp as the timestamp field. You should see time-series data for the period requested (e.g. 7 days). You should also see a 'spike' up in the histogram. This is your anomaly.
+Check your Kibana (localhost:5601) and define an index pattern for "smoke_event*", using `timestamp` as the timestamp field. You should see time-series data for the period requested (e.g. 7 days). You should also see a 'spike' up in the histogram. This is your anomaly.
 
 
 ![kibana](/wiki/kibana-1.png)
 
 
-In ML (assuming you have this already going), you can upload the job definition inside ```ml/jobs```. You may need to tune the ElasticSearch version if you are not using 2.x/5.x. Since this is a fixed time-series with a definite endpoint, you can define the ML job to terminate (NOT real-time).
+In ML (assuming you have this already going), you can start with a Single Metric job, select `smoke_event*` as your index pattern and you should see a histogram with an obvious anomaly/spike. 
 
-![prelert](/wiki/prelert-1.png)
+If you're adventurous, you might look at defining your job via JSON from inside ```ml/jobs```. Since this is a fixed time-series with a definite endpoint, you can define the ML job to terminate (NOT real-time).
+
+![ml-anomaly](/wiki/ml-anomaly-1.png)
+
+![old-prelert](/wiki/prelert-1.png)
