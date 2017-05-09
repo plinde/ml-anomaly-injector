@@ -22,6 +22,11 @@ def buildEvent(timestamp = None):
         event['timestamp'] = timestamp.strftime('%Y-%m-%dT%H:%M:%SZ')
 
     #TODO make some of these random inputs from seed lists
+    
+    #add these 2 for bulk API goodness
+    event['_index'] = 'test'
+    event['_type'] = 'foo'
+       
     event['request'] = '/index.html'
     event['response'] = '200'
     event['agent'] = 'Firefox'
@@ -45,24 +50,40 @@ def buildEventSeries(daysBack = 1):
 
     # print STEP_TIME.strftime('%Y-%m-%dT%H:%M:%SZ')
 
+    from elasticsearch import Elasticsearch, helpers
+    es = Elasticsearch(host='localhost',http_auth=['elastic','changeme'])
+    es.indices.create(index='test', ignore=400)
+    
     while True:
-        # break when we reach the current time again
-        if STEP_TIME == CURRENT_TIME:
-            print "stop!"
-            break
 
-        # step 5 seconds forward for each event
-        STEP_TIME = STEP_TIME + timedelta(seconds=5)
-        # print STEP_TIME.strftime('%Y-%m-%dT%H:%M:%SZ')
+        #batch 1000 events, then bulk index into ES, then resume the loop
+        i = 0
+        bulk_list = []
+        while i < 1000:
+            i = i + 1
+            # break when we reach the current time again
+            if STEP_TIME == CURRENT_TIME:
+                print('STEP_TIME : %s' % STEP_TIME)
+                print('CURRENT_TIME : %s' % CURRENT_TIME)
+                print "STEP_TIME == CURRENT_TIME, stopping event generation"
+                return
 
-        json_event = buildEvent(STEP_TIME)
+            # step 5 seconds forward for each event
+            STEP_TIME = STEP_TIME + timedelta(seconds=5)
+            # print STEP_TIME.strftime('%Y-%m-%dT%H:%M:%SZ')
 
-        # decide which output to use
-        # writeEventToLogstashHTTP(json_event)
-        writeEventToRedis(json_event)
-        # writeEventToNull(json_event)
+            json_event = buildEvent(STEP_TIME)
+           
+            bulk_list.append(json.loads(json_event))
 
-    return
+            # decide which output to use
+            # writeEventToLogstashHTTP(json_event)
+            # writeEventToRedis(json_event)
+            # writeEventToNull(json_event)
+
+        bulk_iter = iter(bulk_list)
+
+        helpers.bulk(es,bulk_iter,stats_only=True)
 
 
 def buildAnomalyEventSeries(daysBack = 1):
@@ -111,6 +132,9 @@ def buildAnomalyEventSeries(daysBack = 1):
 
     return
 
+def writeEventToBulk(json_event):
+    print json_event
+
 def writeEventToNull(json_event):
     print json_event
 
@@ -138,7 +162,7 @@ def main():
     print "creating time series for previous %s days" % daysBack
     buildEventSeries(daysBack)
     print "creating anomaly time series range within the previous %s days" % daysBack
-    buildAnomalyEventSeries(daysBack)
+    #buildAnomalyEventSeries(daysBack)
 
 if __name__ == "__main__":
     main()
