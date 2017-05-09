@@ -7,6 +7,11 @@ from datetime import timedelta
 from elasticsearch import Elasticsearch, helpers
 MAX_BULKSIZE = 100000
 
+ES_HOST="localhost"
+ES_PORT="9200"
+ES_AUTH="elastic:changeme"
+ES_SSL=False
+
 def buildEvent(timestamp = None):
 
     event = {}
@@ -49,7 +54,11 @@ def buildEventSeries(daysBack = 7, bulkSize = 1000):
     STEP_TIME = CURRENT_TIME - timedelta(days=daysBack)
 
     # connection to elasticsearch
-    es = Elasticsearch(host='localhost',http_auth=['elastic','changeme'])
+    if ES_SSL == True:
+        es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH,use_ssl=True)
+    else:
+        es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH)
+        
     # create index, even if it exists already
     es.indices.create(index='smoke_event', ignore=400)
     print "elasticsearch bulk size is %i" % bulkSize
@@ -93,8 +102,11 @@ def buildAnomalyEventSeries(daysBack = 7, anomalyPeriod = 30, anomalyMagnificati
     print "creating anomaly period with %s magnification for %i minutes within the previous %s days" % (anomalyMagnification, anomalyPeriod, daysBack)
     
     # connection to elasticsearch
-    es = Elasticsearch(host='localhost',http_auth=['elastic','changeme'])
-    
+    if ES_SSL == True:
+        es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH,use_ssl=True)
+    else:
+        es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH)
+            
     print "Requested elasticsearch bulk size is %i" % bulkSize
     # number of events per flush magnified by the anomalyMagnification
     calculatedBulkSize = bulkSize * anomalyMagnification

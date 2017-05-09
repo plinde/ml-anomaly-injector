@@ -10,12 +10,18 @@ The utility will generate a linear time-series set of 'HTTP access log' type eve
 
 #### Expectations
 * Python 2.7+ 
-* Elastic Stack 5.4+, running localhost:9200 () plinde/ml-anomaly-injector#3
+* Elastic Stack 5.4+
 
 * install python dependencies
 
 ```
 pip install -r requirements.txt
+```
+
+* Configuration
+```
+Edit the ES_ variables in generator.py to match your environment (Host,Port,Auth,SSL)
+
 ```
 
 * Run the utility
@@ -40,6 +46,8 @@ Check your Kibana (localhost:5601) and define an index pattern for "smoke_event*
 In ML (assuming you have this already going), you can start with a Single Metric job, select `smoke_event*` as your index pattern and you should see a histogram with an obvious anomaly/spike. 
 
 If you're adventurous, you might look at defining your job via JSON from inside ```ml/jobs```. Since this is a fixed time-series with a definite endpoint, you can define the ML job to terminate (NOT real-time).
+
+![ml-anomaly-job-1.png](wiki/ml-anomaly-job-1.png)
 
 ![ml-anomaly](/wiki/ml-anomaly-1.png)
 
