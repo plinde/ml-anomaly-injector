@@ -1,0 +1,48 @@
+{
+  "job_id": "smoke_event-test1",
+  "job_type": "anomaly_detector",
+  "description": "",
+  "create_time": 1493309120656,
+  "finished_time": 1493309754482,
+  "analysis_config": {
+    "bucket_span": "30s",
+    "detectors": [
+      {
+        "detector_description": "count",
+        "function": "count",
+        "detector_rules": []
+      }
+    ],
+    "influencers": [
+      "request"
+    ]
+  },
+  "data_description": {
+    "time_field": "@timestamp",
+    "time_format": "epoch_ms"
+  },
+  "model_snapshot_retention_days": 1,
+  "model_snapshot_id": "1493309753",
+  "results_index_name": "shared",
+  "datafeed_config": {
+    "datafeed_id": "datafeed-smoke_event-test1",
+    "job_id": "smoke_event-test1",
+    "query_delay": "60s",
+    "frequency": "60s",
+    "indexes": [
+      "smoke_event*"
+    ],
+    "types": [
+      "smoke_event"
+    ],
+    "query": {
+      "match_all": {
+        "boost": 1
+      }
+    },
+    "scroll_size": 1000,
+    "chunking_config": {
+      "mode": "auto"
+    }
+  }
+}
