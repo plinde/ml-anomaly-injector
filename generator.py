@@ -55,7 +55,7 @@ def buildEventSeries(daysBack = 7, bulkSize = 1000):
 
     # connection to elasticsearch
     if ES_SSL == True:
-        es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH,use_ssl=True)
+        es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH,use_ssl=True,verify_certs=True)
     else:
         es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH)
         
@@ -92,7 +92,7 @@ def buildEventSeries(daysBack = 7, bulkSize = 1000):
       
         print "reached %s events, flushing to ElasticSearch" % bulkSize
         bulk_iter = iter(bulk_list)
-        print(helpers.bulk(es,bulk_iter,stats_only=True))
+        print(helpers.bulk(es,bulk_iter,stats_only=False,raise_on_exception=False))
 
 
 def buildAnomalyEventSeries(daysBack = 7, anomalyPeriod = 30, anomalyMagnification = 10, bulkSize = 10000):
@@ -103,7 +103,7 @@ def buildAnomalyEventSeries(daysBack = 7, anomalyPeriod = 30, anomalyMagnificati
     
     # connection to elasticsearch
     if ES_SSL == True:
-        es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH,use_ssl=True)
+        es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH,use_ssl=True,verify_certs=True)
     else:
         es = Elasticsearch(host=ES_HOST,port=ES_PORT,http_auth=ES_AUTH)
             
@@ -164,7 +164,7 @@ def buildAnomalyEventSeries(daysBack = 7, anomalyPeriod = 30, anomalyMagnificati
                 # ugly math to get the remaining # ((i * 10) - 10))
                 print('Flushing remaining %i events to ElasticSearch Bulk API' % len(bulk_list))
                 bulk_iter = iter(bulk_list)
-                print(helpers.bulk(es,bulk_iter,stats_only=True))
+                print(helpers.bulk(es,bulk_iter,stats_only=True,raise_on_exception=False))
                 
                 return
 
@@ -187,7 +187,7 @@ def buildAnomalyEventSeries(daysBack = 7, anomalyPeriod = 30, anomalyMagnificati
 
         print "reached %i events, flushing to ElasticSearch" % (len(bulk_list))
         bulk_iter = iter(bulk_list)
-        print(helpers.bulk(es,bulk_iter,stats_only=True))
+        print(helpers.bulk(es,bulk_iter,stats_only=True,raise_on_exception=False))
 
 def writeEventToNull(json_event):
     print json_event
